@@ -21,19 +21,40 @@ const PredictPage = () => {
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
   const [manualData, setManualData] = useState({
-    revenueGrowth: 0.12,
+    ebitdaMargins: 0.35,
     profitMargins: 0.25,
-    debtToEquity: 0.5,
+    grossMargins: 0.43,
+    operatingCashflow: 50000000,
+    revenueGrowth: 0.12,
+    operatingMargins: 0.30,
+    ebitda: 100000000,
+    grossProfits: 150000000,
+    freeCashflow: 40000000,
+    currentPrice: 150.0,
+    earningsGrowth: 0.08,
     currentRatio: 1.8,
     returnOnAssets: 0.15,
+    debtToEquity: 0.5,
     returnOnEquity: 0.30,
-    grossMargins: 0.43,
-    operatingMargins: 0.30,
-    ebitdaMargins: 0.35,
-    earningsGrowth: 0.08,
-    forwardPE: 28.0,
-    priceToBook: 45.0,
+    totalCash: 80000000,
+    totalDebt: 30000000,
+    totalRevenue: 500000000,
+    totalCashPerShare: 15.0,
+    revenuePerShare: 95.0,
     quickRatio: 0.9,
+    enterpriseToRevenue: 5.0,
+    enterpriseToEbitda: 12.0,
+    forwardEps: 8.5,
+    sharesOutstanding: 5000000,
+    bookValue: 100.0,
+    trailingEps: 7.8,
+    priceToBook: 45.0,
+    heldPercentInsiders: 0.05,
+    enterpriseValue: 2500000000,
+    earningsQuarterlyGrowth: 0.10,
+    pegRatio: 2.8,
+    forwardPE: 28.0,
+    marketCap: 750000000,
     industry: "Technology"
   });
 
@@ -156,50 +177,111 @@ const PredictPage = () => {
 
         <TabsContent value="manual" className="space-y-4">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border border-border rounded-lg p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h3 className="font-heading text-lg font-semibold mb-4">Enter Financial Metrics</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="revenueGrowth">Revenue Growth</Label>
-                <Input id="revenueGrowth" type="number" step="0.01" value={manualData.revenueGrowth} onChange={(e) => setManualData({...manualData, revenueGrowth: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="industry" className="text-sm">Industry *</Label>
+                <Input id="industry" type="text" value={manualData.industry} onChange={(e) => setManualData({...manualData, industry: e.target.value})} className="mt-1 bg-input border-border" placeholder="e.g., Technology" />
               </div>
+              
               <div>
-                <Label htmlFor="profitMargins">Profit Margins</Label>
-                <Input id="profitMargins" type="number" step="0.01" value={manualData.profitMargins} onChange={(e) => setManualData({...manualData, profitMargins: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="revenueGrowth" className="text-sm">Revenue Growth</Label>
+                <Input id="revenueGrowth" type="number" step="0.01" value={manualData.revenueGrowth} onChange={(e) => setManualData({...manualData, revenueGrowth: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="debtToEquity">Debt to Equity</Label>
-                <Input id="debtToEquity" type="number" step="0.1" value={manualData.debtToEquity} onChange={(e) => setManualData({...manualData, debtToEquity: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="earningsGrowth" className="text-sm">Earnings Growth</Label>
+                <Input id="earningsGrowth" type="number" step="0.01" value={manualData.earningsGrowth} onChange={(e) => setManualData({...manualData, earningsGrowth: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="currentRatio">Current Ratio</Label>
-                <Input id="currentRatio" type="number" step="0.1" value={manualData.currentRatio} onChange={(e) => setManualData({...manualData, currentRatio: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="profitMargins" className="text-sm">Profit Margins</Label>
+                <Input id="profitMargins" type="number" step="0.01" value={manualData.profitMargins} onChange={(e) => setManualData({...manualData, profitMargins: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="returnOnAssets">Return on Assets</Label>
-                <Input id="returnOnAssets" type="number" step="0.01" value={manualData.returnOnAssets} onChange={(e) => setManualData({...manualData, returnOnAssets: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="grossMargins" className="text-sm">Gross Margins</Label>
+                <Input id="grossMargins" type="number" step="0.01" value={manualData.grossMargins} onChange={(e) => setManualData({...manualData, grossMargins: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="returnOnEquity">Return on Equity</Label>
-                <Input id="returnOnEquity" type="number" step="0.01" value={manualData.returnOnEquity} onChange={(e) => setManualData({...manualData, returnOnEquity: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="operatingMargins" className="text-sm">Operating Margins</Label>
+                <Input id="operatingMargins" type="number" step="0.01" value={manualData.operatingMargins} onChange={(e) => setManualData({...manualData, operatingMargins: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="grossMargins">Gross Margins</Label>
-                <Input id="grossMargins" type="number" step="0.01" value={manualData.grossMargins} onChange={(e) => setManualData({...manualData, grossMargins: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="ebitdaMargins" className="text-sm">EBITDA Margins</Label>
+                <Input id="ebitdaMargins" type="number" step="0.01" value={manualData.ebitdaMargins} onChange={(e) => setManualData({...manualData, ebitdaMargins: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="operatingMargins">Operating Margins</Label>
-                <Input id="operatingMargins" type="number" step="0.01" value={manualData.operatingMargins} onChange={(e) => setManualData({...manualData, operatingMargins: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="returnOnAssets" className="text-sm">Return on Assets (ROA)</Label>
+                <Input id="returnOnAssets" type="number" step="0.01" value={manualData.returnOnAssets} onChange={(e) => setManualData({...manualData, returnOnAssets: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="forwardPE">Forward P/E</Label>
-                <Input id="forwardPE" type="number" step="1" value={manualData.forwardPE} onChange={(e) => setManualData({...manualData, forwardPE: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="returnOnEquity" className="text-sm">Return on Equity (ROE)</Label>
+                <Input id="returnOnEquity" type="number" step="0.01" value={manualData.returnOnEquity} onChange={(e) => setManualData({...manualData, returnOnEquity: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="priceToBook">Price to Book</Label>
-                <Input id="priceToBook" type="number" step="1" value={manualData.priceToBook} onChange={(e) => setManualData({...manualData, priceToBook: parseFloat(e.target.value)})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="debtToEquity" className="text-sm">Debt to Equity</Label>
+                <Input id="debtToEquity" type="number" step="0.1" value={manualData.debtToEquity} onChange={(e) => setManualData({...manualData, debtToEquity: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
+              
               <div>
-                <Label htmlFor="industry">Industry</Label>
-                <Input id="industry" type="text" value={manualData.industry} onChange={(e) => setManualData({...manualData, industry: e.target.value})} className="mt-2 bg-input border-border" />
+                <Label htmlFor="currentRatio" className="text-sm">Current Ratio</Label>
+                <Input id="currentRatio" type="number" step="0.1" value={manualData.currentRatio} onChange={(e) => setManualData({...manualData, currentRatio: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="quickRatio" className="text-sm">Quick Ratio</Label>
+                <Input id="quickRatio" type="number" step="0.1" value={manualData.quickRatio} onChange={(e) => setManualData({...manualData, quickRatio: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="priceToBook" className="text-sm">Price to Book</Label>
+                <Input id="priceToBook" type="number" step="1" value={manualData.priceToBook} onChange={(e) => setManualData({...manualData, priceToBook: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="forwardPE" className="text-sm">Forward P/E</Label>
+                <Input id="forwardPE" type="number" step="1" value={manualData.forwardPE} onChange={(e) => setManualData({...manualData, forwardPE: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="pegRatio" className="text-sm">PEG Ratio</Label>
+                <Input id="pegRatio" type="number" step="0.1" value={manualData.pegRatio} onChange={(e) => setManualData({...manualData, pegRatio: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="totalRevenue" className="text-sm">Total Revenue</Label>
+                <Input id="totalRevenue" type="number" step="1000000" value={manualData.totalRevenue} onChange={(e) => setManualData({...manualData, totalRevenue: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="totalDebt" className="text-sm">Total Debt</Label>
+                <Input id="totalDebt" type="number" step="1000000" value={manualData.totalDebt} onChange={(e) => setManualData({...manualData, totalDebt: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="totalCash" className="text-sm">Total Cash</Label>
+                <Input id="totalCash" type="number" step="1000000" value={manualData.totalCash} onChange={(e) => setManualData({...manualData, totalCash: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="marketCap" className="text-sm">Market Cap</Label>
+                <Input id="marketCap" type="number" step="1000000" value={manualData.marketCap} onChange={(e) => setManualData({...manualData, marketCap: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="freeCashflow" className="text-sm">Free Cashflow</Label>
+                <Input id="freeCashflow" type="number" step="1000000" value={manualData.freeCashflow} onChange={(e) => setManualData({...manualData, freeCashflow: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
+              </div>
+              
+              <div>
+                <Label htmlFor="operatingCashflow" className="text-sm">Operating Cashflow</Label>
+                <Input id="operatingCashflow" type="number" step="1000000" value={manualData.operatingCashflow} onChange={(e) => setManualData({...manualData, operatingCashflow: parseFloat(e.target.value) || 0})} className="mt-1 bg-input border-border" />
               </div>
             </div>
             <Button onClick={handleManualPredict} disabled={loading} className="w-full mt-6 bg-primary hover:bg-primary/90 text-primary-foreground" data-testid="manual-predict-button">

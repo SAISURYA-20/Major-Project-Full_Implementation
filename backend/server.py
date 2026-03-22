@@ -138,20 +138,40 @@ class PredictRequest(BaseModel):
     company: str
 
 class ManualPredictRequest(BaseModel):
-    revenueGrowth: float
+    ebitdaMargins: float
     profitMargins: float
-    debtToEquity: float
+    grossMargins: float
+    operatingCashflow: float
+    revenueGrowth: float
+    operatingMargins: float
+    ebitda: Optional[float] = 0
+    grossProfits: Optional[float] = 0
+    freeCashflow: float
+    currentPrice: Optional[float] = 0
+    earningsGrowth: float
     currentRatio: float
     returnOnAssets: float
+    debtToEquity: float
     returnOnEquity: float
-    grossMargins: float
-    operatingMargins: float
-    ebitdaMargins: float
-    earningsGrowth: float
-    forwardPE: float
-    priceToBook: float
+    totalCash: float
+    totalDebt: float
+    totalRevenue: float
+    totalCashPerShare: Optional[float] = 0
+    revenuePerShare: Optional[float] = 0
     quickRatio: float
-    pegRatio: Optional[float] = 2.0
+    enterpriseToRevenue: Optional[float] = 0
+    enterpriseToEbitda: Optional[float] = 0
+    forwardEps: Optional[float] = 0
+    sharesOutstanding: Optional[float] = 0
+    bookValue: Optional[float] = 0
+    trailingEps: Optional[float] = 0
+    priceToBook: float
+    heldPercentInsiders: Optional[float] = 0
+    enterpriseValue: Optional[float] = 0
+    earningsQuarterlyGrowth: Optional[float] = 0
+    pegRatio: float
+    forwardPE: float
+    marketCap: float
     industry: str
 
 # Endpoints
@@ -283,26 +303,26 @@ async def predict_manual(request: ManualPredictRequest):
     if model is None or preprocessor is None:
         raise HTTPException(status_code=500, detail="Model not loaded")
     
-    # Create a synthetic dataframe with the manual inputs
+    # Create a synthetic dataframe with the manual inputs using ALL fields from request
     manual_data = {
         'Company': ['Manual Input'],
         'Industry': [request.industry],
-        'totalRevenue': [1e9],  # Placeholder
-        'grossProfit': [1e9 * request.grossMargins],
-        'ebitda': [1e9 * request.ebitdaMargins],
-        'netIncome': [1e9 * request.profitMargins],
-        'totalAssets': [1e9 * 2],
-        'totalLiabilities': [1e9],
-        'totalDebt': [1e9 * request.debtToEquity * 0.5],
-        'totalEquity': [1e9 * 0.5],
-        'currentAssets': [1e9 * request.currentRatio],
-        'currentLiabilities': [1e9],
-        'cashAndCashEquivalents': [1e9 * 0.5],
-        'operatingCashFlow': [1e9 * request.operatingMargins],
-        'freeCashFlow': [1e9 * 0.2],
+        'totalRevenue': [request.totalRevenue],
+        'grossProfit': [request.totalRevenue * request.grossMargins],
+        'ebitda': [request.ebitda if request.ebitda > 0 else request.totalRevenue * request.ebitdaMargins],
+        'netIncome': [request.totalRevenue * request.profitMargins],
+        'totalAssets': [request.totalRevenue * 2],
+        'totalLiabilities': [request.totalDebt * 2],
+        'totalDebt': [request.totalDebt],
+        'totalEquity': [request.totalRevenue * 0.5],
+        'currentAssets': [request.totalRevenue * request.currentRatio],
+        'currentLiabilities': [request.totalRevenue],
+        'cashAndCashEquivalents': [request.totalCash],
+        'operatingCashFlow': [request.operatingCashflow],
+        'freeCashFlow': [request.freeCashflow],
         'revenueGrowth': [request.revenueGrowth],
         'earningsGrowth': [request.earningsGrowth],
-        'earningsQuarterlyGrowth': [request.earningsGrowth * 1.1],
+        'earningsQuarterlyGrowth': [request.earningsQuarterlyGrowth if request.earningsQuarterlyGrowth > 0 else request.earningsGrowth * 1.1],
         'returnOnAssets': [request.returnOnAssets],
         'returnOnEquity': [request.returnOnEquity],
         'profitMargins': [request.profitMargins],
@@ -317,12 +337,12 @@ async def predict_manual(request: ManualPredictRequest):
         'forwardPE': [request.forwardPE],
         'trailingPE': [request.forwardPE * 1.1],
         'pegRatio': [request.pegRatio],
-        'enterpriseToRevenue': [5.0],
-        'enterpriseToEbitda': [10.0],
-        'bookValue': [1e9],
-        'marketCap': [1e9 * request.priceToBook],
-        'enterpriseValue': [1e9 * 5],
-        'sharesOutstanding': [1e9],
+        'enterpriseToRevenue': [request.enterpriseToRevenue if request.enterpriseToRevenue > 0 else 5.0],
+        'enterpriseToEbitda': [request.enterpriseToEbitda if request.enterpriseToEbitda > 0 else 10.0],
+        'bookValue': [request.bookValue if request.bookValue > 0 else 100.0],
+        'marketCap': [request.marketCap],
+        'enterpriseValue': [request.enterpriseValue if request.enterpriseValue > 0 else request.marketCap * 1.2],
+        'sharesOutstanding': [request.sharesOutstanding if request.sharesOutstanding > 0 else 1e9],
         'beta': [1.0],
         'fiftyTwoWeekHigh': [100.0]
     }
@@ -362,7 +382,7 @@ async def predict_manual(request: ManualPredictRequest):
         risk_level = "High"
     
     return {
-        "company": "Manual Input",
+        "company": f"{request.industry} Company (Manual Input)",
         "industry": request.industry,
         "distress": {
             "label": "Distressed" if distress_prob > 0.5 else "Not Distressed",
