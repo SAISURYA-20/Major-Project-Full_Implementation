@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, Users, Award, Code } from "lucide-react";
+import { BookOpen, Award, Code } from "lucide-react";
 
 const AboutPage = () => {
   const contributions = [
@@ -31,7 +31,7 @@ const AboutPage = () => {
 
       {/* Paper Info */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6" data-testid="paper-info">
-        <div className="flex items-start gap-4 mb-6">
+        <div className="flex items-start gap-4">
           <BookOpen className="w-8 h-8 text-primary flex-shrink-0" />
           <div>
             <h2 className="font-heading text-2xl font-semibold mb-2">
@@ -41,9 +41,6 @@ const AboutPage = () => {
               A Hybrid LSTM-Transformer-GNN Framework
             </p>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-primary/10 border border-primary rounded-full text-sm font-mono text-primary">
-                IEEE Conference 2026
-              </span>
               <span className="px-3 py-1 bg-muted border border-border rounded-full text-sm">
                 Financial Analysis
               </span>
@@ -55,15 +52,6 @@ const AboutPage = () => {
               </span>
             </div>
           </div>
-        </div>
-
-        <div className="border-t border-border pt-6">
-          <div className="flex items-center gap-3 mb-3">
-            <Users className="w-5 h-5 text-primary" />
-            <h3 className="font-heading font-semibold text-lg">Authors & Institution</h3>
-          </div>
-          <p className="text-muted-foreground mb-2">Vel Tech Rangarajan Dr.Sagunthala R&D Institute of Science and Technology</p>
-          <p className="text-sm text-muted-foreground">Chennai, Tamil Nadu, India</p>
         </div>
       </motion.div>
 
@@ -113,22 +101,6 @@ const AboutPage = () => {
               <span className="font-mono text-sm font-semibold">{param.value}</span>
             </div>
           ))}
-        </div>
-      </motion.div>
-
-      {/* Citation */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary rounded-lg p-6">
-        <h2 className="font-heading text-xl font-semibold mb-3">Citation</h2>
-        <div className="bg-card/80 backdrop-blur-sm rounded-md p-4 font-mono text-sm">
-          <pre className="text-muted-foreground whitespace-pre-wrap">
-{`@inproceedings{corporateflow2026,
-  title={Mapping the Evaluation of Corporate Strategies Through Flow Detection: A Hybrid LSTM-Transformer-GNN Framework},
-  author={Vel Tech Research Team},
-  booktitle={IEEE Conference on Financial Analysis and Machine Learning},
-  year={2026},
-  organization={IEEE}
-}`}
-          </pre>
         </div>
       </motion.div>
     </div>
