@@ -51,11 +51,8 @@ companies = [
     "Electronic Arts", "Activision Blizzard", "Take-Two Interactive", "Roblox Corp", "Unity Software",
     "Epic Games", "Riot Games", "Valve Corp", "Bungie Inc", "Ubisoft Entertainment",
     "Square Enix", "Capcom Co", "Bandai Namco", "Konami Holdings", "Sega Sammy",
-    "Nintendo Co", "Red Bull GmbH", "Monster Beverage", "Constellation Brands", "Anheuser-Busch InBev",
-    "Diageo PLC", "Heineken NV", "Carlsberg Group", "Molson Coors", "Boston Beer",
-    "Kraft Heinz", "General Mills", "Kellogg Co", "Mondelez Intl", "Nestle SA",
-    "Unilever PLC", "Colgate-Palmolive", "Kimberly-Clark", "Estee Lauder", "L'Oreal SA"
-]
+    "Nintendo Co"
+]  # Exactly 226 companies
 
 industries = [
     "Technology", "Software", "E-commerce", "Internet Services", "Social Media",
