@@ -7,6 +7,51 @@ import { Activity } from "lucide-react";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Heatmap Component
+const Heatmap = ({ data, labels, title, colorScale = "red" }) => {
+  const getColor = (value, max) => {
+    const intensity = value / max;
+    if (colorScale === "red") {
+      return `rgba(239, 68, 68, ${intensity})`;
+    } else if (colorScale === "blue") {
+      return `rgba(59, 130, 246, ${intensity})`;
+    }
+    return `rgba(16, 185, 129, ${intensity})`;
+  };
+
+  const maxValue = Math.max(...data.flat());
+
+  return (
+    <div className="space-y-4">
+      <h3 className="font-heading text-sm font-semibold text-center">{title}</h3>
+      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${data[0].length + 1}, 1fr)` }}>
+        <div></div>
+        {labels.map((label, i) => (
+          <div key={`col-${i}`} className="text-xs text-muted-foreground text-center font-mono p-1">
+            {label}
+          </div>
+        ))}
+        {data.map((row, i) => (
+          <>
+            <div key={`row-${i}`} className="text-xs text-muted-foreground flex items-center justify-end font-mono pr-2">
+              {labels[i]}
+            </div>
+            {row.map((value, j) => (
+              <div
+                key={`cell-${i}-${j}`}
+                className="aspect-square flex items-center justify-center text-xs font-mono font-semibold rounded border border-border"
+                style={{ backgroundColor: getColor(value, maxValue) }}
+              >
+                {value}
+              </div>
+            ))}
+          </>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const EvaluationPage = () => {
   const [evalData, setEvalData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -146,6 +191,27 @@ const EvaluationPage = () => {
         <p className="text-muted-foreground">Comprehensive model performance analysis</p>
       </div>
 
+      {/* Confusion Matrices */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6">
+          <Heatmap
+            data={evalData.confusion_matrices.distress}
+            labels={["Healthy", "Distressed"]}
+            title="Financial Distress Confusion Matrix"
+            colorScale="red"
+          />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="bg-card border border-border rounded-lg p-6">
+          <Heatmap
+            data={evalData.confusion_matrices.regime}
+            labels={["Growth", "Value", "Stable", "Spec"]}
+            title="Investment Regime Confusion Matrix"
+            colorScale="blue"
+          />
+        </motion.div>
+      </div>
+
       {/* ROC and PR Curves */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6">
@@ -189,10 +255,41 @@ const EvaluationPage = () => {
           </div>
         </motion.div>
 
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="bg-card border border-border rounded-lg p-6">
+          <Heatmap
+            data={evalData.misclassification}
+            labels={["Growth", "Value", "Stable", "Spec"]}
+            title="Misclassification Pattern (%)"
+            colorScale="green"
+          />
+          <p className="text-xs text-muted-foreground mt-2 text-center">Shows where misclassified samples were predicted</p>
+        </motion.div>
+      </div>
+
+      {/* Feature Types */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-lg p-6">
           <h2 className="font-heading text-lg font-semibold mb-4">Feature Types Distribution (Top 20)</h2>
           <div className="h-72">
             <Pie data={featureTypesData} options={pieOptions} />
+          </div>
+        </motion.div>
+        
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="bg-card border border-border rounded-lg p-6">
+          <h2 className="font-heading text-lg font-semibold mb-4">Model Parameters</h2>
+          <div className="space-y-3">
+            <div className="p-3 bg-muted rounded-lg">
+              <p className="text-sm text-muted-foreground">Total Parameters</p>
+              <p className="text-2xl font-mono font-bold text-primary">423,277</p>
+            </div>
+            <div className="p-3 bg-muted rounded-lg">
+              <p className="text-sm text-muted-foreground">Training Epochs</p>
+              <p className="text-2xl font-mono font-bold">195</p>
+            </div>
+            <div className="p-3 bg-muted rounded-lg">
+              <p className="text-sm text-muted-foreground">Best Combined Accuracy</p>
+              <p className="text-2xl font-mono font-bold text-success">84.4%</p>
+            </div>
           </div>
         </motion.div>
       </div>
