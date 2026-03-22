@@ -26,7 +26,7 @@ const AboutPage = () => {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-3xl font-bold mb-2">About This Research</h1>
-        <p className="text-muted-foreground">IEEE Conference Paper Implementation</p>
+        <p className="text-muted-foreground">Hybrid LSTM-Transformer-GNN Framework</p>
       </div>
 
       {/* Paper Info */}

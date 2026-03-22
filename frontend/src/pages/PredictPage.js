@@ -67,7 +67,12 @@ const PredictPage = () => {
     setLoading(true);
     try {
       const response = await axios.post(`${API}/predict-manual`, manualData);
-      setPrediction(response.data);
+      // Update company name in response to show "Manual Input" with industry
+      const updatedResponse = {
+        ...response.data,
+        company: `${manualData.industry} Company (Manual Input)`
+      };
+      setPrediction(updatedResponse);
     } catch (error) {
       console.error("Error predicting:", error);
     } finally {
@@ -208,7 +213,14 @@ const PredictPage = () => {
       {prediction && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6" data-testid="prediction-results">
           <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="font-heading text-xl font-semibold mb-4">Prediction Results</h2>
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
+              <div>
+                <h2 className="font-heading text-2xl font-semibold">{prediction.company}</h2>
+                <p className="text-sm text-muted-foreground mt-1">{prediction.industry}</p>
+              </div>
+            </div>
+            
+            <h3 className="font-heading text-xl font-semibold mb-4">Prediction Results</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Distress Prediction */}
               <div className={`p-6 rounded-lg border-2 ${

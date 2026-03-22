@@ -86,12 +86,6 @@ const Layout = ({ children }) => {
                   );
                 })}
               </nav>
-
-              <div className="mt-8 p-4 bg-muted rounded-lg border border-border">
-                <p className="text-xs text-muted-foreground mb-2">Research Project</p>
-                <p className="text-sm font-medium">Vel Tech University</p>
-                <p className="text-xs text-muted-foreground mt-1">IEEE Conference 2026</p>
-              </div>
             </div>
           </motion.aside>
         )}
