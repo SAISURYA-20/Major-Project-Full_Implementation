@@ -131,15 +131,19 @@ class FinancialPreprocessor:
         distress_condition_2 = (df['currentRatio'] < 1.0) & (df['returnOnAssets'] < 0)
         df['distress_label'] = (distress_condition_1 | distress_condition_2).astype(int)
         
-        # Investment Regime label (4 classes)
+        # Investment Regime label (4 classes) - balanced distribution
         regime_labels = []
         for idx, row in df.iterrows():
-            if row['revenueGrowth'] > 0.15 and row['earningsGrowth'] > 0.10:
+            # Growth: High growth companies
+            if row['revenueGrowth'] > 0.10 and row['earningsGrowth'] > 0.08:
                 regime_labels.append(0)  # Growth
-            elif row['priceToBook'] < 2.0 and row['forwardPE'] < 15:
+            # Value: Undervalued with positive profitability
+            elif row['priceToBook'] < 10.0 and row['forwardPE'] < 30 and row['profitMargins'] > 0.02 and row['revenueGrowth'] < 0.15:
                 regime_labels.append(1)  # Value
-            elif abs(row['revenueGrowth']) < 0.05 and row['profitMargins'] > 0.05:
+            # Stable: Low volatility, consistent margins
+            elif abs(row['revenueGrowth']) < 0.08 and row['profitMargins'] > 0.05:
                 regime_labels.append(2)  # Stable
+            # Speculative: Everything else (high growth but unprofitable, or highly valued)
             else:
                 regime_labels.append(3)  # Speculative
         

@@ -66,10 +66,13 @@ def train_model(data_path, model_save_path, preprocessor_save_path, epochs=50):
     print(f"Distress positive weight: {distress_pos_weight:.2f}")
     print(f"Regime class weights: {regime_weights}")
     
-    # Split data
+    # Split data - use non-stratified split to avoid issues with rare classes
     indices = np.arange(len(X))
-    train_idx, temp_idx = train_test_split(indices, test_size=0.3, stratify=y_regime, random_state=42)
-    val_idx, test_idx = train_test_split(temp_idx, test_size=0.5, stratify=y_regime[temp_idx], random_state=42)
+    min_class_count = min(regime_class_counts)
+    
+    print(f"Min class count: {min_class_count}")
+    train_idx, temp_idx = train_test_split(indices, test_size=0.3, random_state=42)
+    val_idx, test_idx = train_test_split(temp_idx, test_size=0.5, random_state=42)
     
     train_dataset = FinancialDataset(
         X[train_idx], y_distress[train_idx], y_regime[train_idx],
