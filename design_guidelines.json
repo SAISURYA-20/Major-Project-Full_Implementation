@@ -1,0 +1,135 @@
+{
+  "project_name": "Corporate Strategy Flow Detection Dashboard",
+  "design_philosophy": {
+    "theme": "Dark Mode Research Lab",
+    "tone": "Academic, High-Precision, Algorithmic",
+    "core_concept": "Visualizing the invisible flows of corporate strategy. The interface should feel like a specialized tool for financial forensics.",
+    "archetype": "The Performance Pro (Archetype 2) + Swiss High-Contrast (Archetype 4)",
+    "surface_strategy": "Grid Borders & Tactical Minimalism. Use thin borders and glow effects to define hierarchy."
+  },
+  "typography": {
+    "font_families": {
+      "heading": "Syne, sans-serif",
+      "body": "DM Sans, sans-serif",
+      "mono": "DM Mono, monospace"
+    },
+    "google_fonts_import": "@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,400;500;700&family=Syne:wght@400;600;700&display=swap');",
+    "usage_rules": {
+      "headings": "Use 'Syne' for all section titles and major metrics. Font weights 600 or 700. Tracking tight.",
+      "body": "Use 'DM Sans' for general text, descriptions, and labels. High legibility.",
+      "data": "Use 'DM Mono' for ALL financial numbers, confidence scores, dates, and code snippets. This is non-negotiable for the 'research' feel."
+    }
+  },
+  "colors": {
+    "palette": {
+      "background": "#0a0e1a",
+      "surface": "#111827",
+      "surface_highlight": "#1f2937",
+      "primary": "#00d4ff",
+      "secondary": "#7c3aed",
+      "success": "#10b981",
+      "danger": "#ef4444",
+      "text_primary": "#f9fafb",
+      "text_secondary": "#9ca3af",
+      "border": "#1f2937"
+    },
+    "tailwind_config_extension": {
+      "colors": {
+        "background": "#0a0e1a",
+        "card": "#111827",
+        "card-foreground": "#f9fafb",
+        "popover": "#111827",
+        "popover-foreground": "#f9fafb",
+        "primary": "#00d4ff",
+        "primary-foreground": "#0a0e1a",
+        "secondary": "#7c3aed",
+        "secondary-foreground": "#ffffff",
+        "muted": "#1f2937",
+        "muted-foreground": "#9ca3af",
+        "accent": "#1f2937",
+        "accent-foreground": "#f9fafb",
+        "destructive": "#ef4444",
+        "destructive-foreground": "#ffffff",
+        "border": "#1f2937",
+        "input": "#1f2937",
+        "ring": "#00d4ff"
+      },
+      "fontFamily": {
+        "sans": ["DM Sans", "sans-serif"],
+        "heading": ["Syne", "sans-serif"],
+        "mono": ["DM Mono", "monospace"]
+      }
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid (Mode B: High Density). Every pixel must be utilized.",
+    "spacing": "Compact for data density, but grouped logically. Use 'gap-4' for dashboard grids.",
+    "container_style": "Card-less look or flat cards with 1px borders. No heavy drop shadows. Use 'border border-gray-800' to define areas."
+  },
+  "components": {
+    "Card": {
+      "style": "bg-card border border-border rounded-lg",
+      "header": "border-b border-border p-4",
+      "content": "p-4"
+    },
+    "Button": {
+      "style": "Sharp edges or minimal rounded-md. Primary buttons should use the Cyan accent with black text for high contrast.",
+      "hover": "hover:opacity-90 transition-opacity"
+    },
+    "Badge": {
+      "style": "Use 'DM Mono'. Pill shape. Outline variant preferred for neutral states."
+    },
+    "Charts": {
+      "library": "chart.js",
+      "wrapper": "react-chartjs-2",
+      "style": "Dark mode optimized. Grid lines should be color '#374151' (gray-700) with 0.2 opacity. Text color '#9ca3af'.",
+      "colors": [
+        "#00d4ff",
+        "#7c3aed",
+        "#10b981",
+        "#ef4444",
+        "#f59e0b"
+      ]
+    },
+    "Navigation": {
+      "style": "Sidebar or Topbar with glassmorphism (backdrop-blur-md bg-background/80). Active state: Cyan text + subtle glow."
+    }
+  },
+  "visual_enhancers": {
+    "Glow Effects": "Use 'shadow-[0_0_15px_rgba(0,212,255,0.3)]' for active elements or high-distress predictions.",
+    "Gradients": "Avoid full background gradients. Use subtle linear gradients for progress bars or chart fills (Cyan to transparent).",
+    "Borders": "Use 'border-t-2 border-primary' on top of key metric cards to signify importance."
+  },
+  "images": {
+    "hero_background": {
+      "url": "https://images.pexels.com/photos/97077/pexels-photo-97077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Abstract Network Graph",
+      "usage": "Hero section background with heavy dark overlay (opacity 80-90%) to ensure text readability."
+    },
+    "about_section": {
+      "url": "https://images.pexels.com/photos/5784807/pexels-photo-5784807.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Financial Analysis Screen",
+      "usage": "Visual anchor for the 'About' or 'Methodology' section."
+    }
+  },
+  "accessibility": {
+    "contrast": "Ensure text-primary (#f9fafb) is used on the dark background (#0a0e1a). Avoid using dark gray text on the dark background.",
+    "focus_states": "Visible cyan ring offset-2 for keyboard navigation."
+  },
+  "instructions_to_main_agent": [
+    "INSTALLATION: Run 'npm install chart.js react-chartjs-2 framer-motion clsx tailwind-merge' immediately.",
+    "FONTS: Add the Google Fonts import to 'src/index.css' at the very top.",
+    "TAILWIND: Update 'tailwind.config.js' with the provided colors and font families.",
+    "CHARTS: Use 'react-chartjs-2' for all visualizations. Configure the 'defaults' in a centralized file to set global font (DM Mono) and colors.",
+    "LAYOUT: Create a responsive layout. Sidebar on desktop, collapsible drawer on mobile.",
+    "TEST_IDS: Add 'data-testid' to all interactive elements (buttons, inputs, chart containers)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not center align the app container.",
+    "Use 'sonner' for toasts.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Every interaction needs micro-animations - hover states, transitions.",
+    "Use 'DM Mono' for all numerical data.",
+    "Ensure the 'Distress Prediction' is the most prominent element on the Predict page."
+  ]
+}
