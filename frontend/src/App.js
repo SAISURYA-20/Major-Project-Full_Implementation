@@ -8,6 +8,7 @@ import PerformancePage from "@/pages/PerformancePage";
 import FeaturesPage from "@/pages/FeaturesPage";
 import DatasetPage from "@/pages/DatasetPage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
+import EvaluationPage from "@/pages/EvaluationPage";
 import AboutPage from "@/pages/AboutPage";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/dataset" element={<DatasetPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/evaluation" element={<EvaluationPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </Layout>
