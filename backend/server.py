@@ -223,6 +223,9 @@ async def get_stats():
     distress_counts = np.bincount(y[:, 0].astype(int))
     regime_counts = np.bincount(y[:, 1].astype(int))
     
+    # Get industry distribution (top 10)
+    industry_dist = df_original['Industry'].value_counts().head(10).to_dict()
+    
     return {
         "total_companies": len(df_original),
         "total_industries": df_original['Industry'].nunique(),
@@ -235,7 +238,7 @@ async def get_stats():
             "Stable": int(regime_counts[2]) if len(regime_counts) > 2 else 0,
             "Speculative": int(regime_counts[3]) if len(regime_counts) > 3 else 0
         },
-        "industry_distribution": df_original['Industry'].value_counts().head(10).to_dict()
+        "industry_distribution": industry_dist
     }
 
 @api_router.post("/predict")

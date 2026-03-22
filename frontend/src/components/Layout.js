@@ -23,6 +23,7 @@ const Layout = ({ children }) => {
     { path: "/performance", label: "Performance", icon: "📈" },
     { path: "/features", label: "Features", icon: "🔬" },
     { path: "/dataset", label: "Dataset", icon: "💾" },
+    { path: "/analytics", label: "Analytics", icon: "📉" },
     { path: "/about", label: "About", icon: "📄" },
   ];
 
