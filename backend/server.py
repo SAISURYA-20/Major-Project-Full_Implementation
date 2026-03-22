@@ -537,6 +537,12 @@ async def get_evaluation_metrics():
         "training_progress": training_progress
     }
 
+@api_router.get("/training-dashboard")
+async def get_training_dashboard():
+    """Get comprehensive training progress data"""
+    from training_dashboard_data import training_dashboard_data
+    return training_dashboard_data
+
 # Include router
 app.include_router(api_router)
 
