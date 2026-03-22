@@ -81,31 +81,41 @@ const EvaluationPage = () => {
 
   // ROC Curve Data
   const rocData = {
+    labels: evalData.roc_curve.fpr,
     datasets: [{
       label: `ROC Curve (AUC = ${evalData.roc_curve.auc.toFixed(3)})`,
-      data: evalData.roc_curve.fpr.map((fpr, i) => ({ x: fpr, y: evalData.roc_curve.tpr[i] })),
+      data: evalData.roc_curve.tpr,
       borderColor: '#3b82f6',
       backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      stepped: true,
-      borderWidth: 2,
+      fill: true,
+      tension: 0.1,
+      borderWidth: 3,
+      pointRadius: 4,
+      pointBackgroundColor: '#3b82f6',
     }, {
       label: 'Random Classifier',
-      data: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+      data: evalData.roc_curve.fpr.map(x => x),
       borderColor: '#ef4444',
       borderDash: [5, 5],
       borderWidth: 2,
       pointRadius: 0,
+      fill: false,
     }]
   };
 
   // Precision-Recall Curve
   const prData = {
+    labels: evalData.pr_curve.recall,
     datasets: [{
       label: `PR Curve (AP = ${evalData.pr_curve.ap.toFixed(3)})`,
-      data: evalData.pr_curve.recall.map((r, i) => ({ x: r, y: evalData.pr_curve.precision[i] })),
+      data: evalData.pr_curve.precision,
       borderColor: '#10b981',
       backgroundColor: 'rgba(16, 185, 129, 0.1)',
-      borderWidth: 2,
+      fill: true,
+      tension: 0.1,
+      borderWidth: 3,
+      pointRadius: 4,
+      pointBackgroundColor: '#10b981',
     }]
   };
 
@@ -217,14 +227,50 @@ const EvaluationPage = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6">
           <h2 className="font-heading text-lg font-semibold mb-4">ROC Curve - Financial Distress</h2>
           <div className="h-80">
-            <Scatter data={rocData} options={{...chartOptions, aspectRatio: 1}} />
+            <Line data={rocData} options={{
+              ...chartOptions,
+              scales: {
+                x: { 
+                  title: { display: true, text: 'False Positive Rate', color: '#9ca3af' },
+                  grid: { color: '#374151' }, 
+                  ticks: { color: '#9ca3af' },
+                  min: 0,
+                  max: 1
+                },
+                y: { 
+                  title: { display: true, text: 'True Positive Rate', color: '#9ca3af' },
+                  grid: { color: '#374151' }, 
+                  ticks: { color: '#9ca3af' },
+                  min: 0,
+                  max: 1
+                },
+              }
+            }} />
           </div>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border border-border rounded-lg p-6">
           <h2 className="font-heading text-lg font-semibold mb-4">Precision-Recall Curve</h2>
           <div className="h-80">
-            <Scatter data={prData} options={{...chartOptions, aspectRatio: 1}} />
+            <Line data={prData} options={{
+              ...chartOptions,
+              scales: {
+                x: { 
+                  title: { display: true, text: 'Recall', color: '#9ca3af' },
+                  grid: { color: '#374151' }, 
+                  ticks: { color: '#9ca3af' },
+                  min: 0,
+                  max: 1
+                },
+                y: { 
+                  title: { display: true, text: 'Precision', color: '#9ca3af' },
+                  grid: { color: '#374151' }, 
+                  ticks: { color: '#9ca3af' },
+                  min: 0,
+                  max: 1
+                },
+              }
+            }} />
           </div>
         </motion.div>
       </div>
