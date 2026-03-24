@@ -49,7 +49,7 @@ const DatasetPage = () => {
           stats.regime_distribution.Stable,
           stats.regime_distribution.Speculative,
         ],
-        backgroundColor: ['#00d4ff', '#7c3aed', '#10b981', '#f59e0b'],
+        backgroundColor: ['#5dd3b3', '#6eb5ff', '#d3d3d3', '#ffd966'],
         borderWidth: 2,
         borderColor: '#111827',
       },
@@ -57,11 +57,11 @@ const DatasetPage = () => {
   } : null;
 
   const distressChartData = stats ? {
-    labels: ['Not Distressed', 'Distressed'],
+    labels: ['Healthy', 'Distressed'],
     datasets: [
       {
         data: [stats.not_distressed_count, stats.distressed_count],
-        backgroundColor: ['#10b981', '#ef4444'],
+        backgroundColor: ['#ff6b9d', '#daa520'],
         borderWidth: 2,
         borderColor: '#111827',
       },

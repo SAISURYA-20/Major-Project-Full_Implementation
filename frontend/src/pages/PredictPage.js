@@ -21,6 +21,8 @@ const PredictPage = () => {
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
   const [manualData, setManualData] = useState({
+    companyName: "Sample Company",
+    industry: "Technology",
     ebitdaMargins: 0.35,
     profitMargins: 0.25,
     grossMargins: 0.43,
@@ -54,8 +56,7 @@ const PredictPage = () => {
     earningsQuarterlyGrowth: 0.10,
     pegRatio: 2.8,
     forwardPE: 28.0,
-    marketCap: 750000000,
-    industry: "Technology"
+    marketCap: 750000000
   });
 
   useEffect(() => {
@@ -88,10 +89,10 @@ const PredictPage = () => {
     setLoading(true);
     try {
       const response = await axios.post(`${API}/predict-manual`, manualData);
-      // Update company name in response to show "Manual Input" with industry
+      // Update company name in response to show entered company name
       const updatedResponse = {
         ...response.data,
-        company: `${manualData.industry} Company (Manual Input)`
+        company: `${manualData.companyName} (${manualData.industry})`
       };
       setPrediction(updatedResponse);
     } catch (error) {
@@ -179,6 +180,11 @@ const PredictPage = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border border-border rounded-lg p-6">
             <h3 className="font-heading text-lg font-semibold mb-4">Enter Financial Metrics</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="companyName" className="text-sm">Company Name *</Label>
+                <Input id="companyName" type="text" value={manualData.companyName} onChange={(e) => setManualData({...manualData, companyName: e.target.value})} className="mt-1 bg-input border-border" placeholder="e.g., Apple Inc." />
+              </div>
+
               <div>
                 <Label htmlFor="industry" className="text-sm">Industry *</Label>
                 <Input id="industry" type="text" value={manualData.industry} onChange={(e) => setManualData({...manualData, industry: e.target.value})} className="mt-1 bg-input border-border" placeholder="e.g., Technology" />

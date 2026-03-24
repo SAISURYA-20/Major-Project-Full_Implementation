@@ -18,7 +18,7 @@ distro==1.9.0
 dnspython==2.8.0
 ecdsa==0.19.1
 email-validator==2.3.0
-emergentintegrations==0.1.0
+# emergentintegrations==0.1.0  # Not available on PyPI - custom package
 et_xmlfile==2.0.0
 fastapi==0.110.1
 fastuuid==0.14.0
@@ -119,6 +119,7 @@ threadpoolctl==3.6.0
 tiktoken==0.12.0
 tokenizers==0.22.2
 torch==2.10.0
+torch-geometric==2.4.0
 tqdm==4.67.3
 typer==0.24.1
 typing-inspection==0.4.2

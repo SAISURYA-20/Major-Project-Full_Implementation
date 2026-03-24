@@ -51,6 +51,9 @@ let webpackConfig = {
         ],
       };
 
+      // Suppress webpack asset freeze warning from dependencies
+      webpackConfig.stats = 'errors-warnings';
+
       // Add health check plugin to webpack if enabled
       if (config.enableHealthCheck && healthPluginInstance) {
         webpackConfig.plugins.push(healthPluginInstance);

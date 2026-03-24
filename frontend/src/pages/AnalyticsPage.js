@@ -9,6 +9,7 @@ const API = `${BACKEND_URL}/api`;
 
 const AnalyticsPage = () => {
   const [stats, setStats] = useState(null);
+  const [paperData, setPaperData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,8 +18,12 @@ const AnalyticsPage = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await axios.get(`${API}/stats`);
-      setStats(response.data);
+      const [statsRes, paperRes] = await Promise.all([
+        axios.get(`${API}/stats`),
+        axios.get(`${API}/paper-charts`)
+      ]);
+      setStats(statsRes.data);
+      setPaperData(paperRes.data);
     } catch (error) {
       console.error("Error fetching analytics:", error);
     } finally {
@@ -26,19 +31,37 @@ const AnalyticsPage = () => {
     }
   };
 
-  // Top 10 Industry Distribution
+  // Missing Values by Feature chart
+  const missingValuesData = paperData ? {
+    labels: Object.keys(paperData.missing_values).filter((_, i) => i < 17),
+    datasets: [{
+      label: 'Missing Values Count',
+      data: Object.values(paperData.missing_values).filter((_, i) => i < 17),
+      backgroundColor: '#ff6b9d',
+    }]
+  } : null;
+
+  // Top 10 Industry Distribution - Paper exact colors
   const industryData = stats?.industry_distribution ? {
     labels: Object.keys(stats.industry_distribution).slice(0, 10),
     datasets: [{
       data: Object.values(stats.industry_distribution).slice(0, 10),
       backgroundColor: [
-        '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4',
-        '#ec4899', '#14b8a6', '#f97316', '#a855f7', '#3b82f6'
+        '#5dd3b3', // Growth teal
+        '#daa520', // Dark gold
+        '#ff90ee', // Light pink for Semiconductors  
+        '#ff6b9d', // Pink
+        '#10b981', // Emerald
+        '#6eb5ff', // Light blue
+        '#ffd966', // Yellow
+        '#ff9999', // Light red
+        '#00d4ff', // Cyan
+        '#7c3aed'  // Purple
       ],
     }]
   } : null;
 
-  // Financial Distress Distribution
+  // Financial Distress Distribution - Paper exact
   const distressData = stats ? {
     labels: ['Healthy', 'Distressed'],
     datasets: [{
@@ -47,7 +70,7 @@ const AnalyticsPage = () => {
     }]
   } : null;
 
-  // Investment Regime Distribution (Bar)
+  // Investment Regime Distribution (Bar) - Paper color scheme
   const regimeBarData = stats ? {
     labels: ['Growth', 'Value', 'Stable', 'Speculative'],
     datasets: [{
@@ -62,57 +85,45 @@ const AnalyticsPage = () => {
     }]
   } : null;
 
-  // Feature Correlation with Distress
-  const distressCorrelationData = {
-    labels: [
-      'leverage_profitability_ratio',
-      'debtToEquity',
-      'financial_health_score',
-      'currentRatio_percentile',
-      'debtToEquity_industry_median',
-      'debtToEquity_industry_mean',
-      'quality_score',
-      'priceToBook',
-      'profitability_score',
-      'risk_score',
-      'returnOnEquity_industry_median',
-      'profitMargins_percentile',
-      'returnOnEquity_industry_mean',
-      'liquidity_score',
-      'returnOnEquity'
-    ],
+  // Feature Correlation with Distress - using paper data
+  const distressCorrelationData = paperData ? {
+    labels: Object.keys(paperData.distress_correlations),
     datasets: [{
       label: 'Absolute Correlation',
-      data: [0.36, 0.34, 0.33, 0.31, 0.30, 0.30, 0.29, 0.29, 0.28, 0.27, 0.27, 0.26, 0.26, 0.26, 0.26],
+      data: Object.values(paperData.distress_correlations),
       backgroundColor: '#ff6b9d',
     }]
-  };
+  } : null;
 
-  // Feature Correlation with Regime
-  const regimeCorrelationData = {
-    labels: [
-      'revenueGrowth_z_score',
-      'revenueGrowth_industry_percentile',
-      'revenueGrowth_percentile',
-      'financial_health_score',
-      'profit_growth_interaction',
-      'growth_score',
-      'quality_score',
-      'positive_growth_momentum',
-      'risk_score',
-      'profitability_score',
-      'profitMargins_percentile',
-      'returnOnAssets_industry_mean',
-      'currentRatio_percentile',
-      'returnOnAssets',
-      'returnOnEquity_percentile'
-    ],
+  // Feature Correlation with Regime - using paper data
+  const regimeCorrelationData = paperData ? {
+    labels: Object.keys(paperData.regime_correlations),
     datasets: [{
       label: 'Absolute Correlation',
-      data: [0.52, 0.50, 0.48, 0.47, 0.40, 0.40, 0.38, 0.33, 0.32, 0.31, 0.29, 0.27, 0.26, 0.25, 0.24],
+      data: Object.values(paperData.regime_correlations),
       backgroundColor: '#ff6b9d',
     }]
-  };
+  } : null;
+
+  // Book Value Distribution
+  const bookValueDist = paperData ? {
+    labels: Object.keys(paperData.book_value_dist),
+    datasets: [{
+      label: 'Frequency',
+      data: Object.values(paperData.book_value_dist),
+      backgroundColor: '#ff6b9d',
+    }]
+  } : null;
+
+  // Return on Assets Distribution
+  const roaDist = paperData ? {
+    labels: Object.keys(paperData.roa_dist),
+    datasets: [{
+      label: 'Frequency',
+      data: Object.values(paperData.roa_dist),
+      backgroundColor: '#ff6b9d',
+    }]
+  } : null;
 
   const chartOptions = {
     indexAxis: 'y',
@@ -130,6 +141,16 @@ const AnalyticsPage = () => {
         grid: { color: '#374151', borderColor: '#1f2937' },
         ticks: { color: '#9ca3af', font: { family: 'DM Sans', size: 10 } },
       },
+    },
+  };
+
+  const barChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#374151' }, ticks: { color: '#9ca3af' } },
+      y: { grid: { color: '#374151' }, ticks: { color: '#9ca3af' } },
     },
   };
 
@@ -159,6 +180,14 @@ const AnalyticsPage = () => {
         <p className="text-muted-foreground">Comprehensive data quality and feature analysis</p>
       </div>
 
+      {/* Missing Values by Feature */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6">
+        <h2 className="font-heading text-xl font-semibold mb-4">Missing Values by Feature</h2>
+        <div className="h-96">
+          {missingValuesData && <Bar data={missingValuesData} options={chartOptions} />}
+        </div>
+      </motion.div>
+
       {/* Industry Distribution */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border border-border rounded-lg p-6">
         <h2 className="font-heading text-xl font-semibold mb-4">Top 10 Industry Distribution</h2>
@@ -179,50 +208,40 @@ const AnalyticsPage = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-card border border-border rounded-lg p-6">
           <h2 className="font-heading text-xl font-semibold mb-4">Investment Regime Distribution</h2>
           <div className="h-64">
-            {regimeBarData && <Bar data={regimeBarData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false } },
-              scales: {
-                x: { grid: { color: '#374151' }, ticks: { color: '#9ca3af' } },
-                y: { grid: { color: '#374151' }, ticks: { color: '#9ca3af' } },
-              },
-            }} />}
+            {regimeBarData && <Bar data={regimeBarData} options={barChartOptions} />}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Distribution Histograms */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-lg p-6">
+          <h2 className="font-heading text-xl font-semibold mb-4">Distribution: bookValue</h2>
+          <div className="h-64">
+            {bookValueDist && <Bar data={bookValueDist} options={barChartOptions} />}
+          </div>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="bg-card border border-border rounded-lg p-6">
+          <h2 className="font-heading text-xl font-semibold mb-4">Distribution: returnOnAssets</h2>
+          <div className="h-64">
+            {roaDist && <Bar data={roaDist} options={barChartOptions} />}
           </div>
         </motion.div>
       </div>
 
       {/* Feature Correlations */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-card border border-border rounded-lg p-6">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-lg p-6">
         <h2 className="font-heading text-xl font-semibold mb-4">Top 15 Features Correlated with Financial Distress</h2>
         <div className="h-96">
-          <Bar data={distressCorrelationData} options={chartOptions} />
+          {distressCorrelationData && <Bar data={distressCorrelationData} options={chartOptions} />}
         </div>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="bg-card border border-border rounded-lg p-6">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="bg-card border border-border rounded-lg p-6">
         <h2 className="font-heading text-xl font-semibold mb-4">Top 15 Features Correlated with Investment Regime</h2>
         <div className="h-96">
-          <Bar data={regimeCorrelationData} options={chartOptions} />
-        </div>
-      </motion.div>
-
-      {/* Training Progress Summary */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-card border border-border rounded-lg p-6">
-        <h2 className="font-heading text-xl font-semibold mb-4">Training Summary</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground mb-1">Training Epochs</p>
-            <p className="text-2xl font-mono font-bold text-success">195</p>
-          </div>
-          <div className="p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground mb-1">Best Combined Score</p>
-            <p className="text-2xl font-mono font-bold text-primary">84.4%</p>
-          </div>
-          <div className="p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground mb-1">Model Parameters</p>
-            <p className="text-2xl font-mono font-bold">423,277</p>
-          </div>
+          {regimeCorrelationData && <Bar data={regimeCorrelationData} options={chartOptions} />}
         </div>
       </motion.div>
     </div>

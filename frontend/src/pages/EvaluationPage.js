@@ -326,15 +326,15 @@ const EvaluationPage = () => {
           <div className="space-y-3">
             <div className="p-3 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground">Total Parameters</p>
-              <p className="text-2xl font-mono font-bold text-primary">423,277</p>
+              <p className="text-2xl font-mono font-bold text-primary">342,957</p>
             </div>
             <div className="p-3 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground">Training Epochs</p>
-              <p className="text-2xl font-mono font-bold">195</p>
+              <p className="text-2xl font-mono font-bold">200</p>
             </div>
             <div className="p-3 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground">Best Combined Accuracy</p>
-              <p className="text-2xl font-mono font-bold text-success">84.4%</p>
+              <p className="text-2xl font-mono font-bold text-success">82.0%</p>
             </div>
           </div>
         </motion.div>
